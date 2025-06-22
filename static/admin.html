@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebLurk - Painel Administrativo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #9146ff;
+            --secondary-color: #f7931e;
+            --success-color: #00f5ff;
+            --danger-color: #ff6b6b;
+            --warning-color: #ffd93d;
+            --dark-bg: #0e0e10;
+            --card-bg: #18181b;
+            --text-primary: #efeff1;
+            --text-secondary: #adadb8;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #1a1a2e 100%);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary-color);
+            color: var(--text-primary);
+            box-shadow: 0 0 0 0.2rem rgba(145, 70, 255, 0.25);
+        }
+
+        .btn-login {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 12px 30px;
+            border-radius: 10px;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(145, 70, 255, 0.4);
+        }
+
+        /* Dashboard Styles */
+        .dashboard-container {
+            display: none;
+        }
+
+        .navbar-custom {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            padding: 15px 0;
+            box-shadow: 0 4px 20px rgba(145, 70, 255, 0.3);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white !important;
+        }
+
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+            transform: translateY(-1px);
+        }
+
+        .btn-logout {
+            background: var(--danger-color);
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: #ff5252;
+            transform: translateY(-1px);
+        }
+
+        .main-content {
+            padding: 30px 0;
+        }
+
+        .admin-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+        }
+
+        .btn-primary-custom {
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background: #7c3aed;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(145, 70, 255, 0.4);
+        }
+
+        .btn-success-custom {
+            background: var(--success-color);
+            border: none;
+            color: var(--dark-bg);
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success-custom:hover {
+            background: #00d4e6;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger-custom {
+            background: var(--danger-color);
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger-custom:hover {
+            background: #ff5252;
+            transform: translateY(-1px);
+        }
+
+        .btn-warning-custom {
+            background: var(--warning-color);
+            border: none;
+            color: var(--dark-bg);
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-warning-custom:hover {
+            background: #ffed4e;
+            transform: translateY(-1px);
+        }
+
+        .table-custom {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table-custom th {
+            background: rgba(145, 70, 255, 0.2);
+            color: var(--text-primary);
+            border: none;
+            padding: 15px;
+            font-weight: bold;
+        }
+
+        .table-custom td {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: none;
+            padding: 12px 15px;
+            vertical-align: middle;
+        }
+
+        .table-custom tbody tr:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .badge-creator {
+            background: linear-gradient(45deg, var(--warning-color), #ffed4e);
+            color: var(--dark-bg);
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+
+        .badge-admin {
+            background: linear-gradient(45deg, var(--primary-color), #7c3aed);
+            color: white;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: linear-gradient(45deg, var(--success-color), #00d4e6);
+        }
+
+        .notification.error {
+            background: linear-gradient(45deg, var(--danger-color), #ff5252);
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .back-link {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--card-bg);
+            color: var(--primary-color);
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid var(--primary-color);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(145, 70, 255, 0.4);
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .btn-info-custom {
+            background: var(--success-color);
+            border: none;
+            color: var(--dark-bg);
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-info-custom:hover {
+            background: #00d4e6;
+            transform: translateY(-1px);
+        }
+
+        .online-indicator {
+            width: 8px;
+            height: 8px;
+            background: #00f5ff;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .login-card {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+
+            .admin-card {
+                margin: 10px;
+                padding: 20px 15px;
+            }
+
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Container -->
+    <div id="loginContainer" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1 class="login-title">
+                    <i class="fas fa-shield-alt me-2"></i>
+                    WebLurk Admin
+                </h1>
+                <p class="login-subtitle">Painel de Administração</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="loginInput" class="form-label">Login</label>
+                    <input type="text" class="form-control" id="loginInput" placeholder="Digite seu login" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="passwordInput" class="form-label">Senha</label>
+                    <input type="password" class="form-control" id="passwordInput" placeholder="Digite sua senha" required>
+                </div>
+                
+                <button type="submit" class="btn btn-login">
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    Entrar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div id="dashboardContainer" class="dashboard-container">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-shield-alt me-2"></i>
+                    WebLurk Admin
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('admins')">
+                                <i class="fas fa-users me-1"></i>Administradores
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('agenda')">
+                                <i class="fas fa-calendar me-1"></i>Agenda
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('ranking')">
+                                <i class="fas fa-trophy me-1"></i>Ranking
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showSection('online')">
+                                <i class="fas fa-circle me-1"></i>Usuários Online
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <div class="d-flex align-items-center">
+                        <span class="me-3">
+                            <i class="fas fa-user me-1"></i>
+                            <span id="adminName">Admin</span>
+                        </span>
+                        <button class="btn btn-logout" onclick="logout()">
+                            <i class="fas fa-sign-out-alt me-1"></i>Sair
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container main-content">
+            <!-- Administradores Section -->
+            <div id="adminsSection" class="admin-section">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-users"></i>
+                            Gerenciar Administradores
+                        </h3>
+                        <button class="btn btn-primary-custom" onclick="showCreateAdminForm()">
+                            <i class="fas fa-plus me-1"></i>Novo Admin
+                        </button>
+                    </div>
+
+                    <!-- Create Admin Form -->
+                    <div id="createAdminForm" style="display: none;" class="mb-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="newAdminLogin" placeholder="Login do novo admin">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="password" class="form-control" id="newAdminPassword" placeholder="Senha do novo admin">
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success-custom me-2" onclick="createAdmin()">
+                                    <i class="fas fa-save me-1"></i>Salvar
+                                </button>
+                                <button class="btn btn-secondary" onclick="hideCreateAdminForm()">
+                                    <i class="fas fa-times me-1"></i>Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admins Table -->
+                    <div class="table-responsive">
+                        <table class="table table-custom">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Login</th>
+                                    <th>Tipo</th>
+                                    <th>Data de Criação</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminsTableBody">
+                                <!-- Admins will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agenda Section -->
+            <div id="agendaSection" class="admin-section" style="display: none;">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-calendar"></i>
+                            Gerenciar Agenda
+                        </h3>
+                        <div>
+                            <button class="btn btn-success-custom me-2" onclick="exportarAgendaExcel()">
+                                <i class="fas fa-download me-1"></i>Exportar Excel
+                            </button>
+                            <button class="btn btn-danger-custom" onclick="limparAgenda()">
+                                <i class="fas fa-trash me-1"></i>Limpar Agenda
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Upload Section -->
+                    <div class="mb-4">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <input type="file" class="form-control" id="agendaFile" accept=".xlsx,.csv">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Formatos suportados: .xlsx, .csv | Estrutura: A1=Hora, B1=Data, C1=Link, D1=Canal
+                                </small>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-primary-custom w-100" onclick="uploadAgenda()">
+                                    <i class="fas fa-upload me-1"></i>Upload
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agenda Stats -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalItens">0</div>
+                                <div class="stat-label">Total de Itens</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-number" id="horariosPreenchidos">0</div>
+                                <div class="stat-label">Horários Preenchidos</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-number" id="horariosVagos">24</div>
+                                <div class="stat-label">Horários Vagos</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agenda Table -->
+                    <div class="table-responsive">
+                        <table class="table table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Hora</th>
+                                    <th>Data</th>
+                                    <th>Canal</th>
+                                    <th>Link da Plataforma</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="agendaTableBody">
+                                <!-- Agenda items will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ranking Section -->
+            <div id="rankingSection" class="admin-section" style="display: none;">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-trophy"></i>
+                            Ranking de Usuários
+                        </h3>
+                        <div>
+                            <button class="btn btn-success-custom me-2" onclick="exportarRankingExcel()">
+                                <i class="fas fa-download me-1"></i>Exportar Excel
+                            </button>
+                            <button class="btn btn-warning-custom me-2" onclick="exportarRankingCSV()">
+                                <i class="fas fa-file-csv me-1"></i>Exportar CSV
+                            </button>
+                            <button class="btn btn-danger-custom" onclick="limparRanking()">
+                                <i class="fas fa-trash me-1"></i>Limpar Dados
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Ranking Stats -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalUsuarios">0</div>
+                                <div class="stat-label">Total de Usuários</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number" id="usuariosOnline">0</div>
+                                <div class="stat-label">Usuários Online</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number" id="pontosTotal">0</div>
+                                <div class="stat-label">Total de Pontos</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number" id="mediaPontos">0.00</div>
+                                <div class="stat-label">Média de Pontos</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search and Filter -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="searchRanking" placeholder="Buscar usuário..." onkeyup="filtrarRanking()">
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" id="filterTipoJanela" onchange="filtrarRanking()">
+                                <option value="">Todos os tipos</option>
+                                <option value="Pop-Up">Pop-Up</option>
+                                <option value="Tab">Tab</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" id="filterOnline" onchange="filtrarRanking()">
+                                <option value="">Todos os status</option>
+                                <option value="true">Online</option>
+                                <option value="false">Offline</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Ranking Table -->
+                    <div class="table-responsive">
+                        <table class="table table-custom">
+                            <thead>
+                                <tr>
+                                    <th onclick="ordenarRanking('posicao')" style="cursor: pointer;">
+                                        <i class="fas fa-sort me-1"></i>Posição
+                                    </th>
+                                    <th onclick="ordenarRanking('nick_canal')" style="cursor: pointer;">
+                                        <i class="fas fa-sort me-1"></i>Espectadores
+                                    </th>
+                                    <th onclick="ordenarRanking('pontos')" style="cursor: pointer;">
+                                        <i class="fas fa-sort me-1"></i>Pontos
+                                    </th>
+                                    <th onclick="ordenarRanking('media')" style="cursor: pointer;">
+                                        <i class="fas fa-sort me-1"></i>Média
+                                    </th>
+                                    <th>Status</th>
+                                    <th>Tipo Janela</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rankingTableBody">
+                                <!-- Ranking items will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <span class="text-muted">
+                                Mostrando <span id="rankingStart">0</span> a <span id="rankingEnd">0</span> de <span id="rankingTotal">0</span> usuários
+                            </span>
+                        </div>
+                        <div>
+                            <button class="btn btn-secondary btn-sm me-1" onclick="paginaAnterior()" id="btnAnterior" disabled>
+                                <i class="fas fa-chevron-left"></i> Anterior
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="proximaPagina()" id="btnProximo" disabled>
+                                Próximo <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Online Users Section -->
+            <div id="onlineSection" class="admin-section" style="display: none;">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-circle"></i>
+                            Usuários Online
+                        </h3>
+                        <div>
+                            <button class="btn btn-success-custom me-2" onclick="atualizarUsuariosOnline()">
+                                <i class="fas fa-sync me-1"></i>Atualizar
+                            </button>
+                            <button class="btn btn-warning-custom me-2" onclick="toggleAutoUpdate()">
+                                <i class="fas fa-clock me-1"></i><span id="autoUpdateText">Ativar Auto-Update</span>
+                            </button>
+                            <button class="btn btn-info-custom" onclick="exportarUsuariosOnline()">
+                                <i class="fas fa-download me-1"></i>Exportar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Online Stats -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalOnline">0</div>
+                                <div class="stat-label">Usuários Online</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalPopup">0</div>
+                                <div class="stat-label">Pop-Up Ativo</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalTab">0</div>
+                                <div class="stat-label">Tab Ativo</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-number" id="ultimaAtualizacao">--:--</div>
+                                <div class="stat-label">Última Atualização</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Auto-update Status -->
+                    <div class="alert alert-info mb-3" id="autoUpdateStatus" style="display: none;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Auto-update ativo:</strong> Atualizando a cada <span id="intervalText">30</span> segundos
+                        <button class="btn btn-sm btn-outline-info ms-2" onclick="alterarIntervalo()">
+                            <i class="fas fa-cog me-1"></i>Alterar Intervalo
+                        </button>
+                    </div>
+
+                    <!-- Search and Filter -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="searchOnline" placeholder="Buscar usuário online..." onkeyup="filtrarUsuariosOnline()">
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" id="filterTipoJanelaOnline" onchange="filtrarUsuariosOnline()">
+                                <option value="">Todos os tipos</option>
+                                <option value="Pop-Up">Pop-Up</option>
+                                <option value="Tab">Tab</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" id="orderByOnline" onchange="ordenarUsuariosOnline()">
+                                <option value="nick_canal">Nome (A-Z)</option>
+                                <option value="pontos">Pontos (Maior)</option>
+                                <option value="tempo_online">Tempo Online</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Online Users Table -->
+                    <div class="table-responsive">
+                        <table class="table table-custom">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-user me-1"></i>Usuário</th>
+                                    <th><i class="fas fa-trophy me-1"></i>Pontos</th>
+                                    <th><i class="fas fa-window-maximize me-1"></i>Tipo Janela</th>
+                                    <th><i class="fas fa-clock me-1"></i>Tempo Online</th>
+                                    <th><i class="fas fa-calendar me-1"></i>Última Atividade</th>
+                                    <th><i class="fas fa-cogs me-1"></i>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="onlineTableBody">
+                                <!-- Online users will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- No users online message -->
+                    <div id="noUsersOnline" class="text-center py-5" style="display: none;">
+                        <i class="fas fa-users-slash fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Nenhum usuário online no momento</h5>
+                        <p class="text-muted">Os usuários aparecerão aqui quando iniciarem o lurk</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Main Link -->
+    <a href="/" class="back-link">
+        <i class="fas fa-arrow-left me-1"></i>Voltar ao WebLurk
+    </a>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+        <p class="mt-2">Carregando...</p>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Admin JavaScript -->
+    <script src="admin.js"></script>
+</body>
+</html>
+
